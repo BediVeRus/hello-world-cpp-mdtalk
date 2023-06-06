@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -41,6 +42,9 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: clone repo to runner
+        uses: actions/checkout@v3
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
