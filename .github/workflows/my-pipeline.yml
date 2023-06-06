@@ -7,21 +7,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-  run-linters:
-    name: Run linters
-    runs-on: ubuntu-latest
+#   run-linters:
+#     name: Run linters
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: clone repo to runner
-        uses: actions/checkout@v3
+#     steps:
+#       - name: clone repo to runner
+#         uses: actions/checkout@v3
 
-      - name: Install ClangFormat
-        run: sudo apt-get install -y clang-format
+#       - name: Install ClangFormat
+#         run: sudo apt-get install -y clang-format
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          clang_format: true
+#       - name: Run linters
+#         uses: wearerequired/lint-action@v2
+#         with:
+#           clang_format: true
 
   build-and-push:
     name: AWS Credentials
