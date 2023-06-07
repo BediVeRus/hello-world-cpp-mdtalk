@@ -55,6 +55,6 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-  deploy:
-    name: AWS Credentials
-    runs-on: ubuntu-latest
+#   deploy:
+#     name: AWS Credentials
+#     runs-on: ubuntu-latest
