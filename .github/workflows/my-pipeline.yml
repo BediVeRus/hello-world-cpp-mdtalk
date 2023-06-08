@@ -53,6 +53,6 @@ jobs:
         run: | 
           echo ${SSH_KEY} > ssh_aws_key.pem
           chmod 600 ssh_aws_key.pem
-          ssh -i ssh_aws_key.pem ${USER_NAME}@${HOSTNAME}
+          ssh -o StrictHostKeyChecking=no -i ssh_aws_key.pem ${USER_NAME}@${HOSTNAME}
             whoami
             exit
