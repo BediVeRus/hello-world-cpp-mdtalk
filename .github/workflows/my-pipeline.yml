@@ -46,13 +46,14 @@ jobs:
     
       - name: SSH to EC2
         env:
-            SSH_KEY: ${{ secrets.EC2_SSH_KEY  }}
+            SSH_KEY: testkey111222333 #${{ secrets.EC2_SSH_KEY  }}
             HOSTNAME : "3.249.71.127"
             USER_NAME : ${{ secrets.EC2_USERNAME  }}
             
-        run: |
-          echo "$SSH_KEY" > ssh_aws_key.pem && chmod 600 ssh_aws_key.pem
-          ssh -i ssh_aws_key.pem ${USER_NAME}@${HOSTNAME} '
+        run: | 
+          echo ${SSH_KEY}
+          touch test.file
+          ls -la
 
-            touch test.file
-            ls -la
+#          > ssh_aws_key.pem && chmod 600 ssh_aws_key.pem
+#          ssh -i ssh_aws_key.pem ${USER_NAME}@${HOSTNAME}
