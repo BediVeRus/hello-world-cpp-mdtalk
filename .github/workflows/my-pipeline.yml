@@ -54,6 +54,6 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
-          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ubuntu@ssh_aws_key.pem
+          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ubuntu@3.249.71.127
             whoami
             exit
