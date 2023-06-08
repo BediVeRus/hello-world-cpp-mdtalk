@@ -7,55 +7,53 @@ on:
     branches: [ "main" ]
 
 jobs:
-#   CI-pipeline:
-#     name: CI pipeline
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: clone repo to runner
-#         uses: actions/checkout@v3
-
-#       - name: Configure AWS Credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: eu-west-1
-#           role-to-assume: dd-mdlab-role-to-github-for-image-registry
-#           role-duration-seconds: 1200
-#           role-session-name: dd-test-github-actions-session
-          
-#       - name: Login to Amazon ECR
-#         id: login-ecr
-#         uses: aws-actions/amazon-ecr-login@v1
-
-#       - name: Build, tag, and push docker image to Amazon ECR
-#         env:
-#           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#           REPOSITORY: "dd-mdlab-image-registry"
-#           IMAGE_TAG: ${{ github.sha }}
-#         run: |
-#           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-#           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-
-  CD-pipeline:
-    name: CD pipeline
+  CI-pipeline:
+    name: CI pipeline
     runs-on: ubuntu-latest
-    
+
     steps:
-    
-      - name: SSH to EC2
+      - name: clone repo to runner
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+          role-to-assume: dd-mdlab-role-to-github-for-image-registry
+          role-duration-seconds: 1200
+          role-session-name: dd-test-github-actions-session
+          
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push docker image to Amazon ECR
         env:
-            SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
-            HOSTNAME  : "3.249.71.127"
-            USER_NAME : ${{ secrets.EC2_USERNAME }}
-            
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: "dd-mdlab-image-registry"
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
-          chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
-          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ubuntu@3.249.71.127 '
-            pwd
-            whoami
-            exit
-            '
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+#   CD-pipeline:
+#     name: CD pipeline
+#     runs-on: ubuntu-latest
+    
+#     steps:
+    
+#       - name: SSH to EC2
+#         env:
+#             SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
+#             HOSTNAME  : "3.249.71.127"
+#             USER_NAME : ${{ secrets.EC2_USERNAME }}
+            
+#         run: |
+#           mkdir -p ~/.ssh/
+#           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
+#           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
+#           ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" secrets.EC2_USERNAME@3.249.71.127 '
+            
+#             '
