@@ -46,13 +46,13 @@ jobs:
     
       - name: SSH to EC2
         env:
-            SSH_KEY   : ${{ secrets.EC2_SSH_KEY  }}
+            SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
             HOSTNAME  : "3.249.71.127"
-            USER_NAME : ${{ secrets.EC2_USERNAME  }}
+            USER_NAME : ${{ secrets.EC2_USERNAME }}
             
         run: | 
-          echo ${SSH_KEY} > ssh_aws_key.pem
-          chmod 600 ssh_aws_key.pem
-          ssh -o StrictHostKeyChecking=no -i ssh_aws_key.pem ${USER_NAME}@${HOSTNAME}
+          echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
+          chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
+          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ubuntu@ssh_aws_key.pem
             whoami
             exit
