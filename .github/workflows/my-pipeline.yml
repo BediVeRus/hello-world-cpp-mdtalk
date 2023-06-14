@@ -52,6 +52,6 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
           ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" secrets.EC2_USERNAME@3.249.71.127 '
-          aws ecr get-login --region eu-west-1 --no-include-email | bash
-          docker run ${{needs.}}
+            aws ecr get-login --region eu-west-1 --no-include-email | bash
+            docker run ${{needs.}}
             '
