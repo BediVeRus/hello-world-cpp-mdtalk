@@ -47,16 +47,11 @@ jobs:
             SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
             HOSTNAME  : "34.248.86.106"
             USER_NAME : ${{ secrets.EC2_USERNAME }}
-            REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
-            IMAGE_TAG: ${{ github.sha }}
-            REGISTRY: ${{ secrets.AWS_REGISTRY }}
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
           ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" "$USER_NAME@$HOSTNAME" '
-            aws ecr get-login --region "$AWS_REGION" --no-include-email | bash
-            echo "test test test"
+            aws ecr get-login --region ${{ vars.AWS_REGION }} --no-include-email | bash
+            docker run ${{ secrets.AWS_REGISTRY }}/${{ vars.AWS_ECR_REPOSITORY_NAME }}:e649e07ec1517f863727586c0499fee3c4c2bd56
             '
-#            docker run "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
-#            '
