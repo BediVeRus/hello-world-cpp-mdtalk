@@ -54,7 +54,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
-          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" $USER_NAME@$HOSTNAME '
-            aws ecr get-login --region eu-west-1 --no-include-email | bash
-            docker run $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" "$USER_NAME@$HOSTNAME" '
+            aws ecr get-login --region "$AWS_REGION" --no-include-email | bash
+            docker run "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
             '
