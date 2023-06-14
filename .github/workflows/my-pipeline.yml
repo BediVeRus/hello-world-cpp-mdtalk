@@ -9,7 +9,7 @@ jobs:
     name: CI pipeline
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.buid-step.outputs.repo }}
+      output1: ${{ steps.buid-step.outputs.image }}
       
     steps:
       - name: clone repo to runner
