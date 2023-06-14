@@ -8,11 +8,14 @@ jobs:
   ci-pipeline:
     name: CI pipeline
     runs-on: ubuntu-latest
-      
+    
+    outputs:
+      output1: ${{ steps.build-step.outputs.imageregistry }}
+      output2: ${{ steps.login-ecr.outputs.registry }}
     steps:
       - name: clone repo to runner
         uses: actions/checkout@v3
-
+        
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
