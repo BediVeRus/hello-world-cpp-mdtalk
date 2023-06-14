@@ -8,8 +8,6 @@ jobs:
   ci-pipeline:
     name: CI pipeline
     runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.build-step.outputs.image }}
       
     steps:
       - name: clone repo to runner
@@ -32,11 +30,12 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         id: build-step
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ github.sha }}
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          echo "imageregistry=$REGISTRY" >> "$GITHUB_OUTPUT"
+          
 #          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
 #          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
@@ -50,20 +49,19 @@ jobs:
             SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
             HOSTNAME  : "34.248.86.106"
             USER_NAME : ${{ secrets.EC2_USERNAME }}
-            IMAGE: ${{ needs.ci-pipelin.outputs.output1 }}
+            IMAGE: ${{ needs.ci-pipelin.steps.login-ecr.outputs.registry }}
         run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
-          chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
-          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" $USER_NAME@$HOSTNAME '
             echo "test 1"
-            echo ${{ needs.ci-pipelin.outputs.output1 }}
+            echo ${{ needs.ci-pipelin.outputs.registry }}
             echo "test 2"
-            echo "${{ needs.ci-pipelin.outputs.output1 }}"
+            echo "${{ needs.ci-pipelin.outputs.imageregistry }}"
             echo "test 3"
             echo $IMAGE
-            '
-         
+            
+#          mkdir -p ~/.ssh/
+#          echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
+#          chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
+#          ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" $USER_NAME@$HOSTNAME '
 #            aws ecr get-login --region eu-west-1 --no-include-email | bash
 #            docker run 
 #            '
