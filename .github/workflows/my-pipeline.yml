@@ -49,12 +49,12 @@ jobs:
             SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
             HOSTNAME  : "34.248.86.106"
             USER_NAME : ${{ secrets.EC2_USERNAME }}
-            IMAGE: ${{ needs.ci-pipelin.steps.login-ecr.outputs.registry }}
+            IMAGE: ${{ needs.ci-pipeline.steps.login-ecr.outputs.registry }}
         run: |
             echo "test 1"
-            echo ${{ needs.ci-pipelin.outputs.registry }}
+            echo ${{ needs.ci-pipeline.outputs.registry }}
             echo "test 2"
-            echo "${{ needs.ci-pipelin.outputs.imageregistry }}"
+            echo "${{ needs.ci-pipeline.outputs.imageregistry }}"
             echo "test 3"
             echo $IMAGE
             
