@@ -32,7 +32,7 @@ jobs:
         env:
           REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ github.sha }}
-          REGISTRY: ${{ secret.AWS_REGISTRY }}
+          REGISTRY: ${{ secrets.AWS_REGISTRY }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
@@ -49,7 +49,7 @@ jobs:
             USER_NAME : ${{ secrets.EC2_USERNAME }}
             REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
             IMAGE_TAG: ${{ github.sha }}
-            REGISTRY: ${{ secret.AWS_REGISTRY }}
+            REGISTRY: ${{ secrets.AWS_REGISTRY }}
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
