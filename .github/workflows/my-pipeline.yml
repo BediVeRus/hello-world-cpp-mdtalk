@@ -5,37 +5,37 @@ on:
     branches: [ "main" ]
 
 jobs:
-#   ci-pipeline:
-#     name: CI pipeline
-#     runs-on: ubuntu-latest
+  ci-pipeline:
+    name: CI pipeline
+    runs-on: ubuntu-latest
     
-#     steps:
-#       - name: clone repo to runner
-#         uses: actions/checkout@v3
+    steps:
+      - name: clone repo to runner
+        uses: actions/checkout@v3
         
-#       - name: Configure AWS Credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: ${{ vars.AWS_REGION }}
-#           role-to-assume: ${{ vars.AWS_ROLE_FOR_GITHUB }}
-#           role-duration-seconds: 1200
-#           role-session-name: dd-test-github-actions-session
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_FOR_GITHUB }}
+          role-duration-seconds: 1200
+          role-session-name: dd-test-github-actions-session
           
-#       - name: Login to Amazon ECR
-#         id: login-ecr
-#         uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-#       - name: Build, tag, and push docker image to Amazon ECR
-#         id: build-and-push
-#         env:
-#           REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
-#           IMAGE_TAG: ${{ github.sha }}
-#           REGISTRY: ${{ vars.AWS_REGISTRY_NAME }}
-#         run: |
-#           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-#           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      - name: Build, tag, and push docker image to Amazon ECR
+        id: build-and-push
+        env:
+          REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+          REGISTRY: ${{ vars.AWS_REGISTRY_NAME }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
   cd-pipeline:
     name: CD pipeline
