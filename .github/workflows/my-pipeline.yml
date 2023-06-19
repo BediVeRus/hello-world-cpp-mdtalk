@@ -52,4 +52,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ${{ vars.EC2_USERNAME }}@${{ vars.EC2_HOSTNAME }} '
             aws ecr get-login --region ${{ vars.AWS_REGION }} --no-include-email | bash
             docker run ${{ vars.AWS_REGISTRY_NAME }}/${{ vars.AWS_ECR_REPOSITORY_NAME }}:${{ github.sha }}
+            echo "WIN!"
             '
