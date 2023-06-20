@@ -57,6 +57,8 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
           ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ${{ vars.EC2_USERNAME }}@${{ vars.EC2_HOSTNAME }} '
-            aws ecr get-login --region ${{ vars.AWS_REGION }} --no-include-email | bash
-            docker run ${{ vars.AWS_REPOSITORY_URL }}:${{ github.sha }}
+            whoami
             '
+#            aws ecr get-login --region ${{ vars.AWS_REGION }} --no-include-email | bash
+#            docker run ${{ vars.AWS_REPOSITORY_URL }}:${{ github.sha }}
+#            '
