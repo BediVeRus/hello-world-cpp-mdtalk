@@ -13,8 +13,10 @@ jobs:
       IMAGE_TAG: ${{ github.sha }}
     
     steps:
-        - run: |
+        - name: test
+          run: |
             echo ${{ github.sha:0:8 }}
+            
 #       - name: clone repo to runner
 #         uses: actions/checkout@v3
         
