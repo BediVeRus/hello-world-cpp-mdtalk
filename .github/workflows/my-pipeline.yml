@@ -15,7 +15,8 @@ jobs:
     steps:
         - name: test
           run: |
-            echo ${{ github.sha:0:8 }}
+            echo ${GITHUB_SHA:0:8}
+            echo ${{ github.sha }}
             
 #       - name: clone repo to runner
 #         uses: actions/checkout@v3
