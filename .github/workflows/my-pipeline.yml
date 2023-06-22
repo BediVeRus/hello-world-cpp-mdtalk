@@ -19,6 +19,7 @@ jobs:
             echo ${{ github.sha }}
             echo $IMAGE_TAG
             echo ${{ env.IMAGE_TAG }}
+            echo "test1=$IMAGE_TAG test2=${IMAGE_TAG} test3=${{ env.IMAGE_TAG }}"
             
 #       - name: clone repo to runner
 #         uses: actions/checkout@v3
