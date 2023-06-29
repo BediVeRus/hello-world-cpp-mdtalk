@@ -21,59 +21,60 @@ jobs:
             echo ${{ env.IMAGE_TAG }}
             echo "test1=$IMAGE_TAG test2=${IMAGE_TAG} test3=${{ env.IMAGE_TAG }}"
             
-#       - name: clone repo to runner
-#         uses: actions/checkout@v3
+        - name: clone repo to runner
+          uses: actions/checkout@v3
         
-#       - name: Configure AWS Credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: ${{ vars.AWS_REGION }}
-#           role-to-assume: ${{ vars.AWS_ROLE_FOR_GITHUB }}
-#           role-duration-seconds: 1200
-#           role-session-name: dd-test-github-actions-session
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ vars.AWS_REGION }}
+            role-to-assume: ${{ vars.AWS_ROLE_FOR_GITHUB }}
+            role-duration-seconds: 1200
+            role-session-name: dd-test-github-actions-session
           
-#       - name: Login to Amazon ECR
-#         id: login-ecr
-#         uses: aws-actions/amazon-ecr-login@v1
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
         
-#       - name: set env
-#         env:
-#           ENVEXAMPLE: ${{ secrets.ENV_EXAMPLE }}
-#         run: |
-#           touch .env
-#           echo "$ENVEXAMPLE" > .env
-#           echo "REPOSITORY=${{ vars.AWS_REPOSITORY_URL }}" >> .env
-#           echo "TAG=${{ github.sha }}" >> .env
-#           cat .env
+        - name: set env
+          env:
+            ENVEXAMPLE: ${{ secrets.ENV_EXAMPLE }}
+          run: |
+            touch .env
+            echo "$ENVEXAMPLE" > .env
+            echo "REPOSITORY=${{ vars.AWS_REPOSITORY_URL }}" >> .env
+            echo "TAG=${{ github.sha }}" >> .env
+            cat .env
 
-#       - name: Build, tag, and push docker image to Amazon ECR
-#         id: build-and-push
-#         env:
-#           REPOSITORY: ${{ vars.AWS_REPOSITORY_URL }}
-#           IMAGE_TAG: ${{ github.sha }}
-#         run: |
-#           docker build -t $REPOSITORY:$IMAGE_TAG .
-#           docker push $REPOSITORY:$IMAGE_TAG
+        - name: Build, tag, and push docker image to Amazon ECR
+          id: build-and-push
+          env:
+            REPOSITORY: ${{ vars.AWS_REPOSITORY_URL }}
+            IMAGE_TAG: ${{ github.sha }}
+          run: |
+            docker buildx create --use --driver=docker-container
+            docker docker buildx build --push -t $REPOSITORY:$IMAGE_TAG --cache-to type=gha --cache-from type=gha .
+            docker push $REPOSITORY:$IMAGE_TAG
           
-#       - name: copy docker-compose to EC2
-#         uses: appleboy/scp-action@v0.1.4
-#         with:
-#           host:     ${{ vars.EC2_HOSTNAME }}
-#           username: ${{ vars.EC2_USERNAME }}
-#           key:      ${{ secrets.EC2_SSH_KEY }}
-#           port: 22
-#           source: "./Dockerfile"
-#           target: "~/"
+        - name: copy docker-compose to EC2
+          uses: appleboy/scp-action@v0.1.4
+          with:
+            host:     ${{ vars.EC2_HOSTNAME }}
+            username: ${{ vars.EC2_USERNAME }}
+            key:      ${{ secrets.EC2_SSH_KEY }}
+            port: 22
+            source: "./Dockerfile"
+            target: "~/"
 
-#       - name: Deploy ot EC2
-#         env:
-#           SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
-#         run: |
-#           mkdir -p ~/.ssh/
-#           echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
-#           chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
-#           ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ${{ vars.EC2_USERNAME }}@${{ vars.EC2_HOSTNAME }} '
-#             whoami
-#             '
+        - name: Deploy ot EC2
+          env:
+            SSH_KEY   : ${{ secrets.EC2_SSH_KEY }}
+          run: |
+            mkdir -p ~/.ssh/
+            echo "$SSH_KEY" > ~/.ssh/dd_mdlab_aws_key.pem
+            chmod 600 ~/.ssh/dd_mdlab_aws_key.pem
+            ssh -o StrictHostKeyChecking=no -i "~/.ssh/dd_mdlab_aws_key.pem" ${{ vars.EC2_USERNAME }}@${{ vars.EC2_HOSTNAME }} '
+              whoami
+              '
