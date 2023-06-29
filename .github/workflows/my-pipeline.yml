@@ -50,9 +50,6 @@ jobs:
 
         - name: Build, tag, and push docker image to Amazon ECR
           id: build-and-push
-          env:
-            REPOSITORY: ${{ vars.AWS_REPOSITORY_URL }}
-            IMAGE_TAG: ${{ github.sha }}
           run: |
             docker buildx create --use --driver=docker-container
             docker buildx build --push -t $REPOSITORY:$IMAGE_TAG --cache-to type=gha --cache-from type=gha .
